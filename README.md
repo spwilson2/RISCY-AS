@@ -1,5 +1,5 @@
 # RISCY-AS
-An assembler for the RISC-V ISA
+An elementary assembler for the RISC-V ISA. For simplicity memory is automatically alligned at 4 byte boundaries.
 
 ## Supported RISC-V Instructions
 Only a subset of the RV32I ISA will be implemented. The following table lists supported instructions.
@@ -26,3 +26,17 @@ Only a subset of the RV32I ISA will be implemented. The following table lists su
 |OR   |%rd,%rs1,%rs2|OR|
 |AND  |%rd,%rs1,%rs2|AND|
 |SBREAK||SBREAK|
+|NOP||NOP|
+
+## Special Instructions
+
+|Format|Instruction|
+|:--|:--|
+|;| Comment (Ignore rest of line)|
+|dd $imm| Declare Doubleword|
+
+## Instruction Format
+Since the assembler is very elementary, input files need to be formatted very specifically. Registers begin with '%', immediates with '$', and args should be in the order shown in tables.
+
+## Immediates
+In early implementation the only accepted immediates will be hexadecimals begining with '0x'.
