@@ -13,13 +13,27 @@ $LINEBAR
 $LINEBAR
 EOF
 
-#TODO: Add detection for pip.
 
 export PYTHONPATH=$SRCDIR:$PYTHONPATH
 
 [ -z "${VENV_DIR:-}" ] && export VENV_DIR="$DIR/venv"
 
 [ -z "${PYTHON_BIN:-}" ] && export PYTHON_BIN="python3"
+
+if $PYTHON_BIN == "python3" 
+then
+    PIP_BIN=pip3
+else
+    PIP_BIN=pip
+fi
+
+
+# Check for pip and virtualenv
+command $PIP_BIN -v >/dev/null 2>&1 || 
+{ echo >&2 "$PIP_BIN not installed.  Aborting."; exit 1; }
+
+command virtualenv -v >/dev/null 2>&1 || 
+{ echo >&2 "virtualenv not installed. Try $PIP_BIN install virtualenv."; exit 1; }
 
 
 # Install the required packages.
@@ -32,10 +46,11 @@ export PYTHONPATH=$SRCDIR:$PYTHONPATH
 
     echo Installing required packages to \"venv\"
 
-    pip install --compile --upgrade -r pip-require.txt
+    $PIP_BIN install --compile --upgrade -r pip-require.txt
 
 }
 
-cd $SRCDIR && $PYTHON_BIN as.py
+# Run the program.
+cd $SRCDIR && $PYTHON_BIN as.py $@
 
 exit
