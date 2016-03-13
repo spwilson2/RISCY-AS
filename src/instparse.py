@@ -10,9 +10,9 @@ class AS_Parser(object):
     def __init__(self,
             stream):  #TODO: Do I want to operate on streams?
         pass
-
     def __itr__(self):
         pass #TODO
+
     def __next__(self):
         pass
 
