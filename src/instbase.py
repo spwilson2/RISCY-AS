@@ -1,40 +1,59 @@
-""" Defines the instructions supported and their respective objects.
-"""
+
+""" Defines the instructions supported and their respective objects.  """
+
+from collections import namedtuple
+
+
+r_operands = namedtuple('r_operands', ['rd', 'rs1', 'rs2'])
+i_operands = namedtuple('r_operands', ['rd', 'rs1', 'imm'])
 
 
 class Instruction(object):
     """The ABC for assembly instructions."""
     def __init__(self):
-        self.__operands = set()
+        pass
 
-class RInstuction(Instruction):
+    def __str__(self):
+        """Instructions should be the same as their __name__"""
+        return str(self.__name__)
+
+
+class RInstruction(Instruction):
     """R-Type Instruction"""
-    pass
+    def __init__(self, rd, rs1, rs2):
+        self._operands = r_operands(rd=rd, rs1=rs1, rs2=rs2)
 
-class IInstuction(Instruction):
+
+class IInstruction(Instruction):
     """I-Type Instruction"""
-    pass
+    def __init__(self, rd, rs1, imm):
+        self._operands = r_operands(rd=rd, rs1=rs1, imm=imm)
 
-class SInstuction(Instruction):
+
+class SInstruction(Instruction):
     """S-Type Instruction"""
     pass
 
-class SBInstuction(Instruction):
+
+class SBInstruction(Instruction):
     """SB-Type Instruction"""
     pass
 
-class UInstuction(Instruction):
+
+class UInstruction(Instruction):
     """U-Type Instruction"""
     pass
 
-class UJInstuction(Instruction):
+
+class UJInstruction(Instruction):
     """UJ-Type Instruction"""
     pass
+
 
 class SpecialInstruction(Instruction):
     """Non-Assembly Instruction"""
     pass
 
-class Branch():#TODO
-    pass
 
+class Branch():  # TODO
+    pass
