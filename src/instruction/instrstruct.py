@@ -4,7 +4,7 @@
 # int.bitlength
 
 from __future__ import print_function
-import click
+#import click
 import bitstruct
 import sys
 
@@ -93,7 +93,7 @@ def check_byteorder(byteorder):
 
 
 # TODO: Make this into a group that can just run all or a single self test.
-@click.command()
+#@click.command()
 def test():
     print('Starting self test.')
     try:
