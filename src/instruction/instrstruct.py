@@ -1,5 +1,7 @@
 
 """Provides the struct used to store instructions within binary files."""
+# TODO: Add automatic detection and creation of format string based on
+# int.bitlength
 
 from __future__ import print_function
 import click
@@ -48,7 +50,7 @@ ENDIAN_CHARMAP = {'little': '<',
                   'big': '>'
                   }
 
-DEFAULT_BYTEORDER    = sys.byteorder
+DEFAULT_BYTEORDER = sys.byteorder
 ENDIAN_CHARMAP[None] = ENDIAN_CHARMAP[DEFAULT_BYTEORDER]
 
 
@@ -67,11 +69,10 @@ def check_byteorder(byteorder):
         raise BadByteorderException('%s not a valid byteorder.\
                                     Try little or big.' % byteorder)
 
-# Self test
-# TODO: Make their ouput clear. (Ouptut the left side too.)
-#if __name__ == '__main__':
+
+# TODO: Make this into a group that can just run all or a single self test.
 @click.command()
-def test():
+def test_instrstruct():
     try:
         Struct(byteorder='hello', frmt='u1u2u3')
     except BadByteorderException:
@@ -84,7 +85,6 @@ def test():
 
     test_struct = Struct(byteorder='big', frmt='u1u2u3')
     assert test_struct._byteorder == 'big', test_struct._byteorder
-
 
     # Test that when we put in None as byteorder we create a default
     # byteorder Struct and that a warning is output to stderr.
@@ -111,3 +111,7 @@ def test():
     assert test_struct.pack(0,1,3) == b'\x13', test_struct.pack(0, 1, 3)
 
     print('---------- PASSED SELF TEST -----------')
+
+# Self test
+if __name__ == '__main__':
+    test_instrstruct

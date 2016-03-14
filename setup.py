@@ -5,9 +5,10 @@ setup(
         version='0.1',
         py_modules=find_packages('src'),
         install_requires=['Click', 'bitstruct'],
+        #TODO: Add selftest entrypoints.
         entry_points= '''
         [console_scripts]
-        test2=src.instruction.instrstruct:test
+        selftest=src.instruction.instrstruct:selftest
         as=src.as:cli
         '''
         )
