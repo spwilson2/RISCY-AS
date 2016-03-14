@@ -41,6 +41,28 @@ class Struct(object):
         """Pack the arguments into a bytearray"""
         return bitstruct.pack(self.frmt, *args)
 
+    # TODO: Implement this at some point.. maybe.
+    # @staticmethod
+    # def quickpack(*args, byteorder=None):
+    #    """Quickly and intelligently pack the arguments without have to create
+    #     a Struct Object.
+    #     """
+    #     frmt = Struct.gen_frmt(args, byteorder=byteorder)
+    #     return bitstruct.pack(frmt, *args)
+
+    # @staticmethod
+    # def gen_frmt(*args, byteorder=None):
+    #     """Generate a bitstruct frmt string based on the arguments."""
+    #     frmt = ENDIAN_CHARMAP[byteorder]
+    #     if type(args) is tuple:
+    #         args = args[0]
+    #         print('broken' + str(args))
+    #     for arg in args:
+    #         print(str(arg))
+    #         frmt += str(len(arg)) + 'u'
+    #         print('frmt:',frmt)
+    #     return frmt
+
 
 class BadByteorderException(Exception):
     pass
@@ -72,7 +94,8 @@ def check_byteorder(byteorder):
 
 # TODO: Make this into a group that can just run all or a single self test.
 @click.command()
-def test_instrstruct():
+def test():
+    print('Starting self test.')
     try:
         Struct(byteorder='hello', frmt='u1u2u3')
     except BadByteorderException:
@@ -108,10 +131,10 @@ def test_instrstruct():
 
     # Try packing some args.
     test_struct = Struct('big', frmt='u1u3u4')
-    assert test_struct.pack(0,1,3) == b'\x13', test_struct.pack(0, 1, 3)
+    assert test_struct.pack(0, 1, 3) == b'\x13', test_struct.pack(0, 1, 3)
 
     print('---------- PASSED SELF TEST -----------')
 
 # Self test
 if __name__ == '__main__':
-    test_instrstruct
+    test()

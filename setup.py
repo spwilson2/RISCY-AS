@@ -8,7 +8,7 @@ setup(
         #TODO: Add selftest entrypoints.
         entry_points= '''
         [console_scripts]
-        selftest=src.instruction.instrstruct:selftest
+        selftest=src.instruction.instrstruct:test
         as=src.as:cli
         '''
         )
