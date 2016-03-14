@@ -1,9 +1,6 @@
 #!/bin/bash 
 
-#
-
-
-export BIN="as"
+export BIN=$1
 
 LINELENGTH=80
 #TODO: Get the Line length param in there...
@@ -66,7 +63,7 @@ command virtualenv --version >/dev/null  ||
     $PIP_BIN install --editable $DIR
 
     # Run the program.
-    $BIN $@
+    $BIN "${@:2}"
 )
 
 exit

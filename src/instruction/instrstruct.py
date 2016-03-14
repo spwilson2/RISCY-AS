@@ -2,19 +2,20 @@
 """Provides the struct used to store instructions within binary files."""
 
 from __future__ import print_function
-import struct
+import click
+import bitstruct
 import sys
 
 
-class Struct(struct.Struct):
+class Struct(object):
     """Conveniece wrapper around struct.Struct class to only need to apply
     the byteorder.
     """
 
-    def __init__(self, byteorder):
+    def __init__(self, byteorder, frmt):
         self._byteorder = None
+        self._frmt = frmt
         self._init_byteorder(byteorder)
-        struct.Struct.__init__(self, self.frmt)
 
     def _init_byteorder(self, byteorder):
         """Initialize the byte order."""
@@ -26,24 +27,29 @@ class Struct(struct.Struct):
         """Property defining the format of the struct using frmt strings from
         the struct pkg."""
 
-        _frmt = 'xL'
-        return ENDIAN_CHARMAP[self._byteorder] + _frmt
+        return ENDIAN_CHARMAP[self._byteorder] + self._frmt
 
     @frmt.setter
     def set(self):
-        """Disable setting for frmt."""
+        """Disable setting for frmt outside of init."""
 
         raise Exception("Can't set frmt.")
+
+    def pack(self, *args):
+        """Pack the arguments into a bytearray"""
+        return bitstruct.pack(self.frmt, *args)
 
 
 class BadByteorderException(Exception):
     pass
 
-ENDIAN_CHARMAP = {'little': '<',
-                  'big': '>',
-                  None: '@'}
 
-DEFAULT_BYTEORDER = sys.byteorder
+ENDIAN_CHARMAP = {'little': '<',
+                  'big': '>'
+                  }
+
+DEFAULT_BYTEORDER    = sys.byteorder
+ENDIAN_CHARMAP[None] = ENDIAN_CHARMAP[DEFAULT_BYTEORDER]
 
 
 def check_byteorder(byteorder):
@@ -63,34 +69,45 @@ def check_byteorder(byteorder):
 
 # Self test
 # TODO: Make their ouput clear. (Ouptut the left side too.)
-if __name__ == '__main__':
+#if __name__ == '__main__':
+@click.command()
+def test():
     try:
-        Struct(byteorder='hello')
+        Struct(byteorder='hello', frmt='u1u2u3')
     except BadByteorderException:
         pass
     else:
         assert False, 'Expected to fail with a BadByteorderException'
 
-    test_struct = Struct(byteorder='little')
+    test_struct = Struct(byteorder='little', frmt='u1u2u3')
     assert test_struct._byteorder == 'little', test_struct._byteorder
 
-    test_struct = Struct(byteorder='big')
+    test_struct = Struct(byteorder='big', frmt='u1u2u3')
     assert test_struct._byteorder == 'big', test_struct._byteorder
+
 
     # Test that when we put in None as byteorder we create a default
     # byteorder Struct and that a warning is output to stderr.
-    from StringIO import StringIO
+    try:
+        from StringIO import StringIO
+    except ImportError:
+        from io import StringIO
+
     stderr = sys.stderr
     stderr_redir = sys.stderr = StringIO()
 
-    test_struct = Struct(None)
+    test_struct = Struct(None, frmt='u1u2u3')
 
     sys.stderr = stderr
 
     assert test_struct._byteorder is None, test_struct._byteorder
-    assert test_struct.frmt == '@xL'
+    assert test_struct.frmt == '<u1u2u3', test_struct.frmt
     assert stderr_redir.getvalue().rstrip() == \
         "WARN: byteorder not given, using system byteorder.",\
         stderr_redir.getvalue().rstrip()
+
+    # Try packing some args.
+    test_struct = Struct('big', frmt='u1u3u4')
+    assert test_struct.pack(0,1,3) == b'\x13', test_struct.pack(0, 1, 3)
 
     print('---------- PASSED SELF TEST -----------')

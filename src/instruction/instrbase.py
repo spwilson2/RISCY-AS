@@ -35,7 +35,7 @@ class RInstruction(Instruction):
     def __init__(self, *, rd, rs1, rs2, opcode, funct3, funct7,
                  byte_order=None):
 
-        super.__init__(self, byte_order=byte_order, opcode=opcode)
+        RInstruction.super.__init__(self, byte_order=byte_order, opcode=opcode)
         self._operands = r_operands(rd=rd, rs1=rs1, rs2=rs2)
         self._funct3 = funct3
         self._funct7 = funct7
@@ -52,7 +52,7 @@ class IInstruction(Instruction):
     super = Instruction
 
     def __init__(self, *, rd, rs1, imm, opcode, funct3):
-        super.__init__(self, opcode)
+        IInstruction.super.__init__(self, opcode)
         self._operands = i_operands(rd=rd, rs1=rs1, imm=imm)
 
 
@@ -61,7 +61,7 @@ class SInstruction(Instruction):
     super = Instruction
 
     def __init__(self, *, rd, rs1, imm, opcode, funct3):
-        super.__init__(self, opcode)
+        SInstruction.super.__init__(self, opcode)
         self._operands = s_operands(rd=rd, rs1=rs1, imm=imm)
 
 
@@ -70,7 +70,7 @@ class SBInstruction(Instruction):
     super = Instruction
 
     def __init__(self, *, rd, rs1, imm, opcode, funct3):
-        super.__init__(self, opcode)
+        SBInstruction.super.__init__(self, opcode)
         self._operands = s_operands(rd=rd, rs1=rs1, imm=imm)
 
 
@@ -79,7 +79,7 @@ class UInstruction(Instruction):
     super = Instruction
 
     def __init__(self, *, rd, imm, opcode):
-        super.__init__(self, opcode)
+        UInstruction.super.__init__(self, opcode)
         self._operands = s_operands(rd=rd, imm=imm)
 
 
@@ -88,7 +88,7 @@ class UJInstruction(UInstruction):
     super = UInstruction
 
     def __init__(self, *, rd, imm, opcode):
-        super.__init__(self, rd, imm, opcode)
+        UJInstruction.super.__init__(self, rd, imm, opcode)
 
 
 class SpecialInstruction():
