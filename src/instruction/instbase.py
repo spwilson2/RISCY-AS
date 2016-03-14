@@ -1,14 +1,11 @@
 
 """ Defines the instructions supported and their respective objects.  """
 
+import struct
+import sys
+import endianess
 from collections import namedtuple
 
-
-big_endian = False
-
-_endianess = { False: 'little',
-               True: 'big'
-             }
 
 class Instruction(object):
     """The ABC for assembly instructions."""
@@ -25,15 +22,6 @@ class Instruction(object):
         """
         raise Exception('as_int Unimplemented in: %s' % self.__name__)
 
-    def __format(self):
-        raise Exception('__format Unimplemented in: %s' % self.__name__)
-
-    def _build_int(*args):
-        args = list(*args)
-        builder = 
-
-        for 
-
 
 class RInstruction(Instruction):
     """R-Type Instruction"""
@@ -42,9 +30,13 @@ class RInstruction(Instruction):
     def __init__(self, rd, rs1, rs2, opcode, funct3, funct7):
         super.__init__(self, opcode)
         self._operands = r_operands(rd=rd, rs1=rs1, rs2=rs2)
+        self._funct3 = funct3
+        self._funct7 = funct7
 
     def as_int(self):
-        pass
+        return _inst_struct.pack(self._funct7, self._operands.rs2,
+                                 self._operands.rs1, self._funct3,
+                                 self._operands.rd, self._opcode)
 
 
 class IInstruction(Instruction):
@@ -97,7 +89,6 @@ class SpecialInstruction():
 
 class Branch():  # TODO
     pass
-
 
 r_operands = namedtuple('operands', ['rd', 'rs1', 'rs2'])
 i_operands = namedtuple('operands', ['rd', 'rs1', 'imm'])
