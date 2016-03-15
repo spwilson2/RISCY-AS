@@ -6,6 +6,7 @@
 * Fix the package hierarchy 
 	* setup.py
 	* riscv/tests
+	* Make imports more natural
 * Parser
 
 ### After High Priority
