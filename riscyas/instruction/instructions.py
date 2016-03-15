@@ -1,6 +1,6 @@
 import sys
 import inspect
-import riscyas.instruction.instrbase
+from riscyas.instruction import instrbase
 
 """
 TODO:

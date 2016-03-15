@@ -21,7 +21,7 @@ $LINEBAR
 EOF
 
 TO_CLEAN="src.egg-info venv"
-PYC_FILES="`find | grep -E -e "*.pyc$" -e "__pycache__" -e "*.out"`"
+PYC_FILES="`find | grep -E -e "*.pyc$" -e "__pycache__" -e "*.out" -e "sec.egg-info"`"
 TO_CLEAN="$PYC_FILES $TO_CLEAN"
 rm -rf $TO_CLEAN; exit $?;
 

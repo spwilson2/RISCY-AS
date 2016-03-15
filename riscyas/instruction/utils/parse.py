@@ -1,5 +1,7 @@
 
 # import instructions
+import re
+from riscyas.instruction import instructions as risc_instrs
 
 """
 This is a crude parser. It only makes a single pass.
@@ -14,6 +16,9 @@ class AS_Parser(object):
     Parser object which we can keep calling next on and it will return
     instuctions/commands.
     """
+    instruction_regex = {instr.__class__: re.compile(str(instr.__class__)) for
+                         instr in risc_instrs.defined_instructions()}
+
 
     def __init__(self, stream):
         # TODO: Likely at some point will need to move to a string object to
@@ -38,7 +43,6 @@ class AS_Parser(object):
         """Try parsing the command into an instruction. Return None if unable
         to.
         """
-
         if not command:
             return
 
@@ -48,3 +52,6 @@ class AS_Parser(object):
         # TODO: Might be worthwile to make this clean the spaces in the middle
         # too ie: split(' ')
         return line.rstrip().lstrip()
+
+if __name__ == '__main__':
+    print(AS_Parser.instruction_regex)
