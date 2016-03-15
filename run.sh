@@ -7,7 +7,7 @@ LINELENGTH=80
 LINEBAR="$(perl -e 'print "#" x 80')"
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-SRCDIR="$DIR/src"
+SRCDIR="$DIR/riscyas"
 
 
 
@@ -60,10 +60,17 @@ command virtualenv --version >/dev/null  ||
     source $VENV_DIR/bin/activate
 
     #TODO: On release will need to change from editable too...?
-    $PIP_BIN install --editable $DIR
+    $PIP_BIN install --editable $SRCDIR
 
+
+if [ "$1" = "test" ]; then
+    # Run the test
+    cd $SRCDIR
+    $PYTHON_BIN setup.py test
+else
     # Run the program.
     $BIN "${@:2}"
+fi
 )
 
 exit

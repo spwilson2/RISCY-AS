@@ -6,9 +6,12 @@ setup(
         py_modules=find_packages('riscyas'),
         install_requires=['Click', 'bitstruct'],
         #TODO: Add selftest entrypoints.
+        #selftest=riscyas.instruction.instrstruct:test
+        #selftest=riscyas.instruction.util.parse:test
         entry_points= '''
         [console_scripts]
-        selftest=riscyas.instruction.instrstruct:test
         as=riscyas.as:cli
-        '''
+        ''',
+        test_suite='nose.collector',
+        tests_require=['nose']
         )
