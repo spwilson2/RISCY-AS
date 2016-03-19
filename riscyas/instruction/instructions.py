@@ -1,6 +1,7 @@
 import sys
 import inspect
-from riscyas.instruction.instrbase import RInstruction, UInstruction
+from riscyas.instruction.instrbase import RInstruction, UInstruction,\
+IInstruction
 
 """
 TODO:
@@ -26,7 +27,6 @@ class JAL(UInstruction):
         self.super.__init__(self, imm=imm,
                             rd=rd, opcode=self.__opcode)
 
-
 #class BEQ():
 #    pass
 #class BNE():
@@ -39,18 +39,73 @@ class JAL(UInstruction):
 #    pass
 #class BGEU():
 #    pass
-#class LW():
-#    pass
+#
 #class SW():
 #    pass
-#class ADDI():
-#    pass
-#class XORI():
-#    pass
-#class ORI():
-#    pass
-#class ANDI():
-#    pass
+
+class LW(IInstruction):
+    super = IInstruction
+    __opcode = 0b0000011
+    __funct3 = 0b010
+
+    def __init__(self, rs1, rd, imm):
+
+        self.super.__init__(self, rs1=rs1, rd=rd, imm=imm,
+                           funct3=self.__funct3,
+                           opcode=self.__opcode
+                           )
+
+
+class ADDI(IInstruction):
+    super = IInstruction
+    __opcode = 0b0010011
+    __funct3 = 0b000
+
+    def __init__(self, rs1, rd, imm):
+
+        self.super.__init__(self, rs1=rs1, rd=rd, imm=imm,
+                           funct3=self.__funct3,
+                           opcode=self.__opcode
+                           )
+
+
+class XORI(IInstruction):
+    super = IInstruction
+    __opcode = 0b0010011
+    __funct3 = 0b100
+
+    def __init__(self, rs1, rd, imm):
+
+        self.super.__init__(self, rs1=rs1, rd=rd, imm=imm,
+                           funct3=self.__funct3,
+                           opcode=self.__opcode
+                           )
+
+
+class ORI(IInstruction):
+    super = IInstruction
+    __opcode = 0b0010011
+    __funct3 = 0b110
+
+    def __init__(self, rs1, rd, imm):
+
+        self.super.__init__(self, rs1=rs1, rd=rd, imm=imm,
+                           funct3=self.__funct3,
+                           opcode=self.__opcode
+                           )
+
+
+class ANDI(IInstruction):
+    super = IInstruction
+    __opcode = 0b0010011
+    __funct3 = 0b111
+
+    def __init__(self, rs1, rd, imm):
+
+        self.super.__init__(self, rs1=rs1, rd=rd, imm=imm,
+                           funct3=self.__funct3,
+                           opcode=self.__opcode
+                           )
 
 
 class ADD(RInstruction):

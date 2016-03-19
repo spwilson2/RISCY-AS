@@ -162,7 +162,7 @@ class IInstruction(Instruction):
 
     def as_bytearray(self):
         return self.pack(
-                self._operands._imm, self._operands.rs1,
+                self._operands.imm, self._operands.rs1,
                 self._funct3, self._operands.rd,
                 self._opcode
                 )
@@ -186,10 +186,10 @@ class SInstruction(Instruction):
 
     def as_bytearray(self):
         return self.pack(
-                get_bitslice(self._operands._imm, 11, 5),
+                get_bitslice(self._operands.imm, 11, 5),
                 self._operands.rs2, self._operands.rs1,
                 self._funct3,
-                get_bitslice(self._operands._imm, 4, 0),
+                get_bitslice(self._operands.imm, 4, 0),
                 self._opcode
                 )
 
@@ -206,12 +206,12 @@ class SBInstruction(SInstruction):
 
     def as_bytearray(self):
         return self.pack(
-                get_bitslice(self._operands._imm, 12, 12),
-                get_bitslice(self._operands._imm, 10, 5),
+                get_bitslice(self._operands.imm, 12, 12),
+                get_bitslice(self._operands.imm, 10, 5),
                 self._operands.rs2, self._operands.rs1,
                 self._funct3,
-                get_bitslice(self._operands._imm, 4, 1),
-                get_bitslice(self._operands._imm, 11, 11),
+                get_bitslice(self._operands.imm, 4, 1),
+                get_bitslice(self._operands.imm, 11, 11),
                 self._opcode
                 )
 
