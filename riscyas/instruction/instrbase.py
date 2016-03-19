@@ -89,9 +89,8 @@ class Instruction(object):
 
     @classproperty
     def assembly_format(class_):
-        # TODO: I'd like to make this up in Instruction, not so low like here..
         return ' '.join((class_.__name__,
-                         ','.join(class_.operand_tup._fields)))
+                         ', '.join(class_.operand_tup._fields)))
 
 
 class RInstruction(Instruction):

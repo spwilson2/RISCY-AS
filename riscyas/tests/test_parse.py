@@ -21,3 +21,8 @@ class TestParse(TestCase):
             print('Couldn\'t match a instruction.')
             raise
         print(parsed)
+
+    def test_make_operand_re(self):
+        from riscyas.instruction.instructions import ADD
+        from riscyas.instruction.utils.parse import make_operand_re
+        print(make_operand_re(ADD))

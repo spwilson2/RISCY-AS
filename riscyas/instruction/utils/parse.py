@@ -11,6 +11,18 @@ TODO:
 """
 
 
+def make_operand_re(instruction_class):
+    """Takes the given instruction class and creates a regex that can be used
+    to get operands.
+    """
+    re_string = instruction_class.__name__
+    for operand in instruction_class.operand_tup._fields:
+        re_string += '[ ]*(?P<%s>[^\s]*),' % operand
+
+    # Get rid of the last tail of string.
+    return re.compile(re_string[:-1])
+
+
 class AS_Parser(object):
     """
     Parser object which we can keep calling next on and it will return
@@ -18,9 +30,9 @@ class AS_Parser(object):
     """
     print(risc_instrs.defined_instructions()[0].assembly_format)
 
-    instruction_regex = {instr.__name__: re.compile(instr.assembly_format) for
-                         instr in risc_instrs.defined_instructions()}
-
+    instructions = {instr.__name__: {'class': instr, 'operand_re':
+                    make_operand_re(instr)} for
+                    instr in risc_instrs.defined_instructions()}
 
     def __init__(self, stream):
         # TODO: Likely at some point will need to move to a string object to
@@ -28,37 +40,58 @@ class AS_Parser(object):
         self._in_stream = stream
 
     def __iter__(self):
-        # We might have multiple lines for a single command?
-        # so allow it to go through multple lines.
+        # We might have multiple lines for a single command?  So allow it to go
+        # through multple lines.
         command_builder = ''
+        instruction = None
 
         for line in self._in_stream:
 
-            command_builder += self.__strip(line)
+            # First get an instruction.
+            if instruction is None:
+                instruction = self.parse_instruction(line)
 
-            instruction = self.parse(command_builder)
+            # Try to instantiate an object from this instruction.
+            if instruction is not None:
 
-            if instruction:
-                command_builder = ''
-                yield instruction
+                # Get the operands for the instruction.
+                command_builder += self.__strip(line)
+                operands = self.parse_operands(command_builder)
 
-    def instruction_as_regex(instr):
-        pass
+                # Instantiate the instruction with the operands.
+                if operands is not None:
+                    command_builder = ''
+                    instruction = None
+                    yield instruction['class'](**operands.as_dict())
 
-    def parse(self, command):
+    def parse_instruction(self, command):
         """Try parsing the command into an instruction. Return None if unable
         to.
         """
         if not command:
             return
 
-        # Search through all instructions looking for this command. If not
-        # found return None.
+        # Get the instruction name ex: ADD
+        command = self.__strip(command)
         instruction = command.split(' ')[0]
+
+        # Search through dict of all instructions looking for this command. If
+        # not found return None.
         try:
-            return self.instruction_regex[instruction]
+            return self.instructions[instruction]
         except KeyError:
             return
+
+    def parse_operands(self, command, instruction):
+        """ """
+
+        if not command or instruction:
+            return
+
+        match = instruction['operand_re'].search(command)
+
+        if match:
+            return match.group_dict()
 
     @staticmethod
     def __strip(line):
@@ -68,4 +101,4 @@ class AS_Parser(object):
         return line.rstrip().lstrip()
 
 if __name__ == '__main__':
-    print(AS_Parser.instruction_regex)
+    print(AS_Parser.instructions)
