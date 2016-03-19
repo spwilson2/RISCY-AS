@@ -70,8 +70,11 @@ def defined_instructions():
     """Return a list of the instructions defined in this file."""
     # FIXME: There probably is a better way to do this with inheritence
     # detection.
-    return [obj for _, obj in inspect.getmembers(sys.modules[__name__])
-            if inspect.isclass(obj)]
+
+    print(ADD.assembly_format)
+    return [ADD]
+    #return [obj for _, obj in inspect.getmembers(sys.modules[__name__])
+    #        if inspect.isclass(obj)]
 
 if __name__ == '__main__':
     print('Starting self test.')

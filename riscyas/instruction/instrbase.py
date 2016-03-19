@@ -14,6 +14,37 @@ DEFAULT_BYTEORDER = sys.byteorder
 ENDIAN_CHARMAP = {'little': '<', 'big': '>'}
 
 
+class ClassPropertyDescriptor(object):
+
+    def __init__(self, fget, fset=None):
+        self.fget = fget
+        self.fset = fset
+
+    def __get__(self, obj, klass=None):
+        if klass is None:
+            klass = type(obj)
+        return self.fget.__get__(obj, klass)()
+
+    def __set__(self, obj, value):
+        if not self.fset:
+            raise AttributeError("can't set attribute")
+        type_ = type(obj)
+        return self.fset.__get__(obj, type_)(value)
+
+    def setter(self, func):
+        if not isinstance(func, (classmethod, staticmethod)):
+            func = classmethod(func)
+        self.fset = func
+        return self
+
+
+def classproperty(func):
+    if not isinstance(func, (classmethod, staticmethod)):
+        func = classmethod(func)
+
+    return ClassPropertyDescriptor(func)
+
+
 # TODO: This functions is so wtf. Find out a better way to flip byte order.
 def flip_bytes(byte_array):
     hex_array = [hex(byte) for byte in byte_array]
@@ -56,15 +87,22 @@ class Instruction(object):
         packed = bitstruct.pack('>' + str(self._struct_frmt), *args)
         return packed if self._byte_order == 'big' else flip_bytes(packed)
 
+    @classproperty
+    def assembly_format(class_):
+        # TODO: I'd like to make this up in Instruction, not so low like here..
+        return ' '.join((class_.__name__,
+                         ','.join(class_.operand_tup._fields)))
+
 
 class RInstruction(Instruction):
     """R-Type Instruction"""
     super = Instruction
 
     r_operands = namedtuple('operands', ['rd', 'rs1', 'rs2'])
+    operand_tup = r_operands
 
-    def __init__(self, *, rd, rs1, rs2, opcode, funct3, funct7,
-                 byte_order=None):
+    def __init__(self, *, rd, rs1, rs2, opcode,
+                 funct3, funct7, byte_order=None):
 
         RInstruction.super.__init__(self, byte_order=byte_order, opcode=opcode)
         self._operands = RInstruction.r_operands(rd=rd, rs1=rs1, rs2=rs2)
@@ -74,10 +112,10 @@ class RInstruction(Instruction):
 
     def as_bytearray(self):
         return self.pack(
-                    self._funct7, self._operands.rs2,
-                    self._operands.rs1, self._funct3,
-                    self._operands.rd, self._opcode
-                    )
+                self._funct7, self._operands.rs2,
+                self._operands.rs1, self._funct3,
+                self._operands.rd, self._opcode
+                )
 
 
 class IInstruction(Instruction):
@@ -138,8 +176,8 @@ if __name__ == '__main__':
                                       funct3=1, rd=1, opcode=1)
 
     assert [hex(c) for c in r_type_instruction.as_bytearray()] ==\
-        ['0x81', '0x90', '0x10', '0x2'] if sys.byteorder == 'little' else\
-        ['0x2', '0x10', '0x90', '0x81'],\
-        [hex(c) for c in r_type_instruction.as_bytearray()]
+            ['0x81', '0x90', '0x10', '0x2'] if sys.byteorder == 'little' else\
+            ['0x2', '0x10', '0x90', '0x81'],\
+            [hex(c) for c in r_type_instruction.as_bytearray()]
 
     print('------------- Self test successful -------------')

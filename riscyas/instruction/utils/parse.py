@@ -16,7 +16,9 @@ class AS_Parser(object):
     Parser object which we can keep calling next on and it will return
     instuctions/commands.
     """
-    instruction_regex = {instr.__class__: re.compile(str(instr.__class__)) for
+    print(risc_instrs.defined_instructions()[0].assembly_format)
+
+    instruction_regex = {instr.__class__.__name__: re.compile(instr.assembly_format) for
                          instr in risc_instrs.defined_instructions()}
 
 
@@ -37,6 +39,7 @@ class AS_Parser(object):
             instruction = self.parse(command_builder)
 
             if instruction:
+                command_builder = ''
                 yield instruction
 
     def parse(self, command):
