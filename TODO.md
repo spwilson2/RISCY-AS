@@ -2,16 +2,13 @@
 
 ### High Priority
 
-* Configure the self tests
-* Fix the package hierarchy 
-	* setup.py
-	* riscv/tests
-	* Make imports more natural
-* Parser
+* Top level assembler
+* Testing for correct binary output
 
 ### After High Priority
 
 * Support all listed instructions
+* Modularize testing
 
 ### Backburner
 
