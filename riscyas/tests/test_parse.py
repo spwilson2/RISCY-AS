@@ -18,6 +18,11 @@ class TestParse(TestCase):
         obj = AS_Parser(StringIO())
         self.assertIs(obj._parse_instruction('ADD 1,2,3')['class'], ADD)
 
+    def test_make_operand_re(self):
+        from riscyas.instruction.instructions import ADD
+        from riscyas.instruction.utils.parse import make_operand_re
+        print(make_operand_re(ADD))
+
     def test_parse_operands(self):
         from riscyas.instruction.utils.parse import AS_Parser
         from io import StringIO
@@ -44,7 +49,61 @@ class TestParse(TestCase):
             raise
         print(parsed)
 
-    def test_make_operand_re(self):
-        from riscyas.instruction.instructions import ADD
-        from riscyas.instruction.utils.parse import make_operand_re
-        print(make_operand_re(ADD))
+    def test_multiple_parse(self):
+        from riscyas.instruction.utils.parse import AS_Parser
+        from io import StringIO
+        from textwrap import dedent
+
+        instr_stream = """\
+        ADD 1,2,3
+        ADD 2,3,4
+        ADD 3,4,5"""
+        instr_stream = dedent(instr_stream)
+
+        obj = AS_Parser(StringIO(instr_stream))
+        try:
+            for line in instr_stream.splitlines():
+                print(line)
+                parsed = next(iter(obj))
+        except StopIteration:
+            print('Couldn\'t match a instruction.')
+            raise
+
+    def test_multiline(self):
+        from riscyas.instruction.utils.parse import AS_Parser
+        from io import StringIO
+        from textwrap import dedent
+
+        instr_stream = """\
+        ADD 1,2,3
+
+        ADD 3,4,5"""
+        instr_stream = dedent(instr_stream)
+
+        obj = AS_Parser(StringIO(instr_stream))
+        try:
+            for _ in range(2):
+                parsed = next(iter(obj))
+        except StopIteration:
+            print('Couldn\'t match a instruction.')
+            raise
+
+    def test_multiline2(self):
+        from riscyas.instruction.utils.parse import AS_Parser
+        from io import StringIO
+        from textwrap import dedent
+
+        instr_stream = """\
+        ADD
+        1,2,3
+
+        ADD 3,4,5"""
+        instr_stream = dedent(instr_stream)
+
+        obj = AS_Parser(StringIO(instr_stream))
+        try:
+            for _ in range(2):
+                parsed = next(iter(obj))
+        except StopIteration:
+            print('Couldn\'t match a instruction.')
+            rais
