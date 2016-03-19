@@ -21,7 +21,7 @@ $LINEBAR
 EOF
 
 TO_CLEAN="src.egg-info venv"
-PYC_FILES="`find | grep -E -e "*.pyc$" -e "__pycache__" -e "*.out" -e "sec.egg-info"`"
+PYC_FILES="`find | grep -E -e "*.pyc$" -e "__pycache__" -e "*.out" -e "sec.egg-info" -e '.egg*'`"
 TO_CLEAN="$PYC_FILES $TO_CLEAN"
 rm -rf $TO_CLEAN; exit $?;
 
@@ -69,6 +69,7 @@ if [ "$1" = "test" ]; then
     $PYTHON_BIN setup.py test
 else
     # Run the program.
+    pwd
     $BIN "${@:2}"
 fi
 )

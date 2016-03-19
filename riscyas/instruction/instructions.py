@@ -71,7 +71,6 @@ def defined_instructions():
     # FIXME: There probably is a better way to do this with inheritence
     # detection.
 
-    print(ADD.assembly_format)
     return [ADD]
     #return [obj for _, obj in inspect.getmembers(sys.modules[__name__])
     #        if inspect.isclass(obj)]

@@ -10,7 +10,7 @@ setup(
         #selftest=riscyas.instruction.util.parse:test
         entry_points= '''
         [console_scripts]
-        as=riscyas.as:cli
+        riscy-as=riscyas.assemble:cli
         ''',
         test_suite='nose.collector',
         tests_require=['nose']

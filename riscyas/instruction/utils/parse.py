@@ -28,8 +28,6 @@ class AS_Parser(object):
     Parser object which we can keep calling next on and it will return
     instuctions/commands.
     """
-    print(risc_instrs.defined_instructions()[0].assembly_format)
-
     instructions = {instr.__name__: {'class': instr, 'operand_re':
                     make_operand_re(instr)} for
                     instr in risc_instrs.defined_instructions()}
@@ -90,9 +88,7 @@ class AS_Parser(object):
         if not command or not instruction:
             return
 
-        print(instruction['operand_re'])
         match = instruction['operand_re'].search(command)
-        print(match)
 
         if match:
             return match.groupdict()
