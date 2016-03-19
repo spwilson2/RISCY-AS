@@ -119,10 +119,8 @@ class Instruction(object):
         `class_.operand_tup`.
         """
         re_string = class_.__name__
-        print(re_string)
         for operand in class_.operand_tup._fields:
             re_string += '[ ]*[%%$]?(?P<%s>[\d]*),' % operand
-        print(re.compile(re_string[:-1]))
         return re.compile(re_string[:-1])
 
 

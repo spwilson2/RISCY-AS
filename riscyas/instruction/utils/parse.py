@@ -61,7 +61,6 @@ class AS_Parser(object):
 
                 # Instantiate the instruction with the operands.
                 if operands is not None:
-                    print(instruction['class'](**operands)._operands)
                     yield instruction['class'](**operands).as_bytearray()
 
                     # Cleanup state to start processing the next instruction.
