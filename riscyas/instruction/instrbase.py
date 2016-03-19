@@ -179,7 +179,7 @@ class SInstruction(Instruction):
     operand_tup = s_operands
 
     def __init__(self, *, byteorder=None, rs1, rs2, imm, opcode, funct3):
-        SInstruction.super.__init__(self, opcode, byteorder=None)
+        SInstruction.super.__init__(self, opcode=opcode, byteorder=None)
         self._operands = SInstruction.s_operands(rs1=rs1, rs2=rs2, imm=imm)
         self._funct3 = funct3
         self._struct_frmt = 'u7u5u5u3u7'
@@ -198,8 +198,8 @@ class SBInstruction(SInstruction):
     """SB-Type Instruction"""
     super = SInstruction
 
-    def __init__(self, *, byteorder=None, rd, rs1, imm, opcode, funct3):
-        SBInstruction.super.__init__(self, rd=rd, rs1=rs1, imm=imm,
+    def __init__(self, *, byteorder=None, rs1, rs2, imm, opcode, funct3):
+        SBInstruction.super.__init__(self, rs1=rs1, rs2=rs2, imm=imm,
                                      opcode=opcode, funct3=funct3,
                                      byteorder=byteorder)
         self._struct_frmt = 'u1u6u5u5u3u4u1u7'

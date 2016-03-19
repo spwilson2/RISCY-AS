@@ -128,7 +128,20 @@ class TestParse(TestCase):
         try:
             parsed = next(iter(obj))
             # TODO: Add expected val.
-            # self.assertEqual(parsed, bytearray(b'\'))
+            # self.assertEqual(parsed, bytearray(b''))
+        except StopIteration:
+            print('Couldn\'t match a instruction.')
+            raise
+
+    def test_SBInstruction(self):
+        from riscyas.instruction.utils.parse import AS_Parser
+        from io import StringIO
+
+        obj = AS_Parser(StringIO('BEQ 1,2,100'))
+        try:
+            parsed = next(iter(obj))
+            # TODO: Add expected val.
+            #self.assertEqual(parsed, bytearray(b''))
         except StopIteration:
             print('Couldn\'t match a instruction.')
             raise

@@ -1,11 +1,12 @@
 import sys
 import inspect
 from riscyas.instruction.instrbase import RInstruction, UInstruction,\
-IInstruction
+IInstruction, SBInstruction
 
 """
 TODO:
-    Make a class generator for these.
+    * Make a class generator for these.
+    * improve the export of these.
 """
 
 
@@ -27,19 +28,84 @@ class JAL(UInstruction):
         self.super.__init__(self, imm=imm,
                             rd=rd, opcode=self.__opcode)
 
-#class BEQ():
-#    pass
-#class BNE():
-#    pass
-#class BLT():
-#    pass
-#class BGE():
-#    pass
-#class BLTU():
-#    pass
-#class BGEU():
-#    pass
-#
+class BEQ(SBInstruction):
+    super = SBInstruction
+    __opcode = 0b1100011
+    __funct3 = 0b000
+
+    def __init__(self, rs1, rs2, imm):
+
+        self.super.__init__(self, rs1=rs1, rs2=rs2, imm=imm,
+                           funct3=self.__funct3,
+                           opcode=self.__opcode
+                           )
+
+
+class BNE(SBInstruction):
+    super = SBInstruction
+    __opcode = 0b1100011
+    __funct3 = 0b001
+
+    def __init__(self, rs1, rs2, imm):
+
+        self.super.__init__(self, rs1=rs1, rs2=rs2, imm=imm,
+                           funct3=self.__funct3,
+                           opcode=self.__opcode
+                           )
+
+
+class BLT(SBInstruction):
+    super = SBInstruction
+    __opcode = 0b1100011
+    __funct3 = 0b100
+
+    def __init__(self, rs1, rs2, imm):
+
+        self.super.__init__(self, rs1=rs1, rs2=rs2, imm=imm,
+                           funct3=self.__funct3,
+                           opcode=self.__opcode
+                           )
+
+
+class BGE(SBInstruction):
+    super = SBInstruction
+    __opcode = 0b1100011
+    __funct3 = 0b101
+
+    def __init__(self, rs1, rs2, imm):
+
+        self.super.__init__(self, rs1=rs1, rs2=rs2, imm=imm,
+                           funct3=self.__funct3,
+                           opcode=self.__opcode
+                           )
+
+
+
+class BLTU(SBInstruction):
+    super = SBInstruction
+    __opcode = 0b1100011
+    __funct3 = 0b110
+
+    def __init__(self, rs1, rs2, imm):
+
+        self.super.__init__(self, rs1=rs1, rs2=rs2, imm=imm,
+                           funct3=self.__funct3,
+                           opcode=self.__opcode
+                           )
+
+
+class BGEU(SBInstruction):
+    super = SBInstruction
+    __opcode = 0b1100011
+    __funct3 = 0b111
+
+    def __init__(self, rs1, rs2, imm):
+
+        self.super.__init__(self, rs1=rs1, rs2=rs2, imm=imm,
+                           funct3=self.__funct3,
+                           opcode=self.__opcode
+                           )
+
 #class SW():
 #    pass
 
