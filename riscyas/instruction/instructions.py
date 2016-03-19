@@ -1,7 +1,7 @@
 import sys
 import inspect
 from riscyas.instruction.instrbase import RInstruction, UInstruction,\
-IInstruction, SBInstruction
+     IInstruction, SBInstruction, SInstruction
 
 """
 TODO:
@@ -106,8 +106,18 @@ class BGEU(SBInstruction):
                            opcode=self.__opcode
                            )
 
-#class SW():
-#    pass
+class SW(SInstruction):
+    super = SInstruction
+    __opcode = 0b0100011
+    __funct3 = 0b010
+
+    def __init__(self, rs1, rs2, imm):
+
+        self.super.__init__(self, rs1=rs1, rs2=rs2, imm=imm,
+                           funct3=self.__funct3,
+                           opcode=self.__opcode
+                           )
+
 
 class LW(IInstruction):
     super = IInstruction
