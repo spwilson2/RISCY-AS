@@ -19,7 +19,7 @@ def make_operand_re(instruction_class):
     for operand in instruction_class.operand_tup._fields:
         re_string += '[ ]*(?P<%s>[^\s]*),' % operand
 
-    # Get rid of the last tail of string.
+    # Get rid of the last comma of string.
     return re.compile(re_string[:-1])
 
 
@@ -49,22 +49,24 @@ class AS_Parser(object):
 
             # First get an instruction.
             if instruction is None:
-                instruction = self.parse_instruction(line)
+                instruction = self._parse_instruction(line)
 
             # Try to instantiate an object from this instruction.
             if instruction is not None:
 
                 # Get the operands for the instruction.
                 command_builder += self.__strip(line)
-                operands = self.parse_operands(command_builder)
+                operands = self._parse_operands(command_builder, instruction)
 
                 # Instantiate the instruction with the operands.
                 if operands is not None:
+                    yield instruction['class'](**operands)
+
+                    # Cleanup state to start processing the next instruction.
                     command_builder = ''
                     instruction = None
-                    yield instruction['class'](**operands.as_dict())
 
-    def parse_instruction(self, command):
+    def _parse_instruction(self, command):
         """Try parsing the command into an instruction. Return None if unable
         to.
         """
@@ -82,16 +84,18 @@ class AS_Parser(object):
         except KeyError:
             return
 
-    def parse_operands(self, command, instruction):
+    def _parse_operands(self, command, instruction):
         """ """
 
-        if not command or instruction:
+        if not command or not instruction:
             return
 
+        print(instruction['operand_re'])
         match = instruction['operand_re'].search(command)
+        print(match)
 
         if match:
-            return match.group_dict()
+            return match.groupdict()
 
     @staticmethod
     def __strip(line):
