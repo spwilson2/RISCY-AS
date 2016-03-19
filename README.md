@@ -32,19 +32,18 @@ supported instructions.
 
 ## Special Instructions
 
+#### Unimplemented
+
 |Format|Instruction|
 |:--|:--|
 |;| Comment (Ignore rest of line)|
 |dd $imm| Declare Doubleword|
 
 ## Instruction Format
+
 Since the assembler is very elementary, input files need to be formatted very
-specifically. Registers begin with '%', immediates with '$', and args should be
-in the order shown in tables.
-
-## Immediates
-In early implementation the only accepted immediates will be hexadecimals begining with '0x'.
-
+specifically. Instructions should follow the format shown on the supplied green
+card or examples.
 
 ## Examples
 
@@ -63,3 +62,9 @@ examples/exout.bin` (I prefer) `od -t x1 examples/exout.bin`
 RISC-AS also supports text output of hex directly!
 
 `./run.sh examples/exin.txt --text`
+
+
+#### CHANGELOG
+
+See CHANGELOG.md for brief descriptions of patches. RISCY-AS is currently
+under heavy development, so there will likely be many changes to come.

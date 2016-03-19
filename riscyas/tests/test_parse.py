@@ -154,7 +154,20 @@ class TestParse(TestCase):
         try:
             parsed = next(iter(obj))
             # TODO: Add expected val.
-            self.assertEqual(parsed, bytearray(b''))
+            # self.assertEqual(parsed, bytearray(b''))
+        except StopIteration:
+            print('Couldn\'t match a instruction.')
+            raise
+
+    def test_OInstruction(self):
+        from riscyas.instruction.utils.parse import AS_Parser
+        from io import StringIO
+
+        obj = AS_Parser(StringIO('NOP'))
+        try:
+            parsed = next(iter(obj))
+            # TODO: Add expected val.
+            self.assertEqual(parsed, bytearray(b'\x33\x00\x00\x00'))
         except StopIteration:
             print('Couldn\'t match a instruction.')
             raise

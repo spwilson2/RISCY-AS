@@ -1,3 +1,6 @@
+"""Defines the AS_Parser object which is used to parse a object that supports
+iteration for strings which match Instructions and outputs their binary format.
+"""
 
 # import instructions
 import re
@@ -7,10 +10,11 @@ from riscyas.instruction import instructions as risc_instrs
 This is a crude parser. It only makes a single pass.
 
 TODO:
-    At some point could have it preparse for directives etc.
+    At some point could have it pre-parse for directives etc.
 """
 
 # TODO: For parsing out comments, just split on ';' and remove all except [0]
+
 
 def make_operand_re(instruction_class):
     """Deprecated
@@ -29,20 +33,21 @@ def make_operand_re(instruction_class):
 class AS_Parser(object):
     """
     Parser object which we can keep calling next on and it will return
-    instuctions/commands.
+    instructions/commands.
     """
     instructions = {instr.__name__: {'class': instr, 'operand_re':
-                    instr.assembly_regex} for
-                    instr in risc_instrs.defined_instructions()}
+                                     instr.assembly_regex} for
+                    instr in risc_instrs.defined_instructions()
+                    }
 
     def __init__(self, stream):
         # TODO: Likely at some point will need to move to a string object to
-        # preparse rather than parse all in one shot.
+        # pre-parse rather than parse all in one shot.
         self._in_stream = stream
 
     def __iter__(self):
         # We might have multiple lines for a single command?  So allow it to go
-        # through multple lines.
+        # through multiple lines.
         command_builder = ''
         instruction = None
 
@@ -86,7 +91,8 @@ class AS_Parser(object):
             return
 
     def _parse_operands(self, command, instruction):
-        """ """
+        """Parse the command using the given instruction to look for operands.
+        """
 
         if not command or not instruction:
             return
@@ -99,8 +105,6 @@ class AS_Parser(object):
     @staticmethod
     def __strip(line):
         """Strip the line on both sides of whitespace"""
-        # TODO: Might be worthwile to make this clean the spaces in the middle
-        # too ie: split(' ')
         return line.rstrip().lstrip()
 
 if __name__ == '__main__':

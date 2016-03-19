@@ -1,7 +1,9 @@
+"""Defines all instructions supported by the assembler."""
+
 import sys
 import inspect
 from riscyas.instruction.instrbase import RInstruction, UInstruction,\
-     IInstruction, SBInstruction, SInstruction
+     IInstruction, SBInstruction, SInstruction, OInstruction
 
 """
 TODO:
@@ -28,6 +30,7 @@ class JAL(UInstruction):
         self.super.__init__(self, imm=imm,
                             rd=rd, opcode=self.__opcode)
 
+
 class BEQ(SBInstruction):
     super = SBInstruction
     __opcode = 0b1100011
@@ -36,9 +39,9 @@ class BEQ(SBInstruction):
     def __init__(self, rs1, rs2, imm):
 
         self.super.__init__(self, rs1=rs1, rs2=rs2, imm=imm,
-                           funct3=self.__funct3,
-                           opcode=self.__opcode
-                           )
+                            funct3=self.__funct3,
+                            opcode=self.__opcode
+                            )
 
 
 class BNE(SBInstruction):
@@ -49,9 +52,9 @@ class BNE(SBInstruction):
     def __init__(self, rs1, rs2, imm):
 
         self.super.__init__(self, rs1=rs1, rs2=rs2, imm=imm,
-                           funct3=self.__funct3,
-                           opcode=self.__opcode
-                           )
+                            funct3=self.__funct3,
+                            opcode=self.__opcode
+                            )
 
 
 class BLT(SBInstruction):
@@ -62,9 +65,9 @@ class BLT(SBInstruction):
     def __init__(self, rs1, rs2, imm):
 
         self.super.__init__(self, rs1=rs1, rs2=rs2, imm=imm,
-                           funct3=self.__funct3,
-                           opcode=self.__opcode
-                           )
+                            funct3=self.__funct3,
+                            opcode=self.__opcode
+                            )
 
 
 class BGE(SBInstruction):
@@ -75,10 +78,9 @@ class BGE(SBInstruction):
     def __init__(self, rs1, rs2, imm):
 
         self.super.__init__(self, rs1=rs1, rs2=rs2, imm=imm,
-                           funct3=self.__funct3,
-                           opcode=self.__opcode
-                           )
-
+                            funct3=self.__funct3,
+                            opcode=self.__opcode
+                            )
 
 
 class BLTU(SBInstruction):
@@ -89,9 +91,9 @@ class BLTU(SBInstruction):
     def __init__(self, rs1, rs2, imm):
 
         self.super.__init__(self, rs1=rs1, rs2=rs2, imm=imm,
-                           funct3=self.__funct3,
-                           opcode=self.__opcode
-                           )
+                            funct3=self.__funct3,
+                            opcode=self.__opcode
+                            )
 
 
 class BGEU(SBInstruction):
@@ -102,9 +104,10 @@ class BGEU(SBInstruction):
     def __init__(self, rs1, rs2, imm):
 
         self.super.__init__(self, rs1=rs1, rs2=rs2, imm=imm,
-                           funct3=self.__funct3,
-                           opcode=self.__opcode
-                           )
+                            funct3=self.__funct3,
+                            opcode=self.__opcode
+                            )
+
 
 class SW(SInstruction):
     super = SInstruction
@@ -114,9 +117,9 @@ class SW(SInstruction):
     def __init__(self, rs1, rs2, imm):
 
         self.super.__init__(self, rs1=rs1, rs2=rs2, imm=imm,
-                           funct3=self.__funct3,
-                           opcode=self.__opcode
-                           )
+                            funct3=self.__funct3,
+                            opcode=self.__opcode
+                            )
 
 
 class LW(IInstruction):
@@ -127,9 +130,9 @@ class LW(IInstruction):
     def __init__(self, rs1, rd, imm):
 
         self.super.__init__(self, rs1=rs1, rd=rd, imm=imm,
-                           funct3=self.__funct3,
-                           opcode=self.__opcode
-                           )
+                            funct3=self.__funct3,
+                            opcode=self.__opcode
+                            )
 
 
 class ADDI(IInstruction):
@@ -140,9 +143,9 @@ class ADDI(IInstruction):
     def __init__(self, rs1, rd, imm):
 
         self.super.__init__(self, rs1=rs1, rd=rd, imm=imm,
-                           funct3=self.__funct3,
-                           opcode=self.__opcode
-                           )
+                            funct3=self.__funct3,
+                            opcode=self.__opcode
+                            )
 
 
 class XORI(IInstruction):
@@ -153,9 +156,9 @@ class XORI(IInstruction):
     def __init__(self, rs1, rd, imm):
 
         self.super.__init__(self, rs1=rs1, rd=rd, imm=imm,
-                           funct3=self.__funct3,
-                           opcode=self.__opcode
-                           )
+                            funct3=self.__funct3,
+                            opcode=self.__opcode
+                            )
 
 
 class ORI(IInstruction):
@@ -166,9 +169,9 @@ class ORI(IInstruction):
     def __init__(self, rs1, rd, imm):
 
         self.super.__init__(self, rs1=rs1, rd=rd, imm=imm,
-                           funct3=self.__funct3,
-                           opcode=self.__opcode
-                           )
+                            funct3=self.__funct3,
+                            opcode=self.__opcode
+                            )
 
 
 class ANDI(IInstruction):
@@ -179,9 +182,9 @@ class ANDI(IInstruction):
     def __init__(self, rs1, rd, imm):
 
         self.super.__init__(self, rs1=rs1, rd=rd, imm=imm,
-                           funct3=self.__funct3,
-                           opcode=self.__opcode
-                           )
+                            funct3=self.__funct3,
+                            opcode=self.__opcode
+                            )
 
 
 class ADD(RInstruction):
@@ -193,10 +196,10 @@ class ADD(RInstruction):
     def __init__(self, rs1, rs2, rd):
 
         self.super.__init__(self, rs1=rs1, rs2=rs2, rd=rd,
-                           funct3=self.__funct3,
-                           funct7=self.__funct7,
-                           opcode=self.__opcode
-                           )
+                            funct3=self.__funct3,
+                            funct7=self.__funct7,
+                            opcode=self.__opcode
+                            )
 
 
 class SUB(RInstruction):
@@ -208,10 +211,10 @@ class SUB(RInstruction):
     def __init__(self, rs1, rs2, rd):
 
         self.super.__init__(self, rs1=rs1, rs2=rs2, rd=rd,
-                           funct3=self.__funct3,
-                           funct7=self.__funct7,
-                           opcode=self.__opcode
-                           )
+                            funct3=self.__funct3,
+                            funct7=self.__funct7,
+                            opcode=self.__opcode
+                            )
 
 
 class XOR(RInstruction):
@@ -223,10 +226,10 @@ class XOR(RInstruction):
     def __init__(self, rs1, rs2, rd):
 
         self.super.__init__(self, rs1=rs1, rs2=rs2, rd=rd,
-                           funct3=self.__funct3,
-                           funct7=self.__funct7,
-                           opcode=self.__opcode
-                           )
+                            funct3=self.__funct3,
+                            funct7=self.__funct7,
+                            opcode=self.__opcode
+                            )
 
 
 class OR(RInstruction):
@@ -238,10 +241,10 @@ class OR(RInstruction):
     def __init__(self, rs1, rs2, rd):
 
         self.super.__init__(self, rs1=rs1, rs2=rs2, rd=rd,
-                           funct3=self.__funct3,
-                           funct7=self.__funct7,
-                           opcode=self.__opcode
-                           )
+                            funct3=self.__funct3,
+                            funct7=self.__funct7,
+                            opcode=self.__opcode
+                            )
 
 
 class AND(RInstruction):
@@ -253,33 +256,32 @@ class AND(RInstruction):
     def __init__(self, rs1, rs2, rd):
 
         self.super.__init__(self, rs1=rs1, rs2=rs2, rd=rd,
-                           funct3=self.__funct3,
-                           funct7=self.__funct7,
-                           opcode=self.__opcode
-                           )
+                            funct3=self.__funct3,
+                            funct7=self.__funct7,
+                            opcode=self.__opcode
+                            )
 
 
-#class SBREAK():
-#    pass
-#class NOP():
-#    pass
+class SBREAK(OInstruction):
+    super = OInstruction
+    __opcode = 0x00100073
+
+    def __init__(self):
+        self.super.__init__(self, opcode=self.__opcode)
+
+
+class NOP(OInstruction):
+    super = OInstruction
+    __opcode = 0x00000033
+
+    def __init__(self):
+        self.super.__init__(self, opcode=self.__opcode)
 
 
 def defined_instructions():
     """Return a list of the instructions defined in this file."""
     # FIXME: There probably is a better way to do this with inheritence
     # detection.
-    #return [ADD]
 
-    #return [ADD]
     return [obj for _, obj in inspect.getmembers(sys.modules[__name__]) if
-        inspect.isclass(obj)]
-    #        if inspect.isclass(obj)]
-
-if __name__ == '__main__':
-    print('Starting self test.')
-    # TODO: Add assertion for correct val on as_bytearray
-    for _ in range(50000):
-        add_instr = ADD(rs1=1, rs2=1, rd=1)
-        add_instr.as_bytearray()
-    print(add_instr.as_bytearray())
+            inspect.isclass(obj)]

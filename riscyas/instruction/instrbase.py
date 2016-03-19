@@ -167,10 +167,6 @@ class IInstruction(Instruction):
                 self._opcode
                 )
 
-#################################################
-######## TODO: Look at init and as_bytearray ########
-#################################################
-
 
 class SInstruction(Instruction):
     """S-Type Instruction"""
@@ -242,27 +238,37 @@ class UJInstruction(UInstruction):
 
     def __init__(self, *, rd, imm, opcode, byteorder=None):
         UJInstruction.super.__init__(self, rd=rd, imm=imm, opcode=opcode,
-                byteorder=byteorder)
+                                     byteorder=byteorder)
+
+
+class OInstruction(Instruction):
+    super = Instruction
+
+    def __init__(self, *, opcode, byteorder=None):
+        OInstruction.super.__init__(self, opcode=opcode,
+                                    byteorder=byteorder)
+        self._struct_frmt = 'u32'
+
+    @classproperty
+    def assembly_format(class_):
+        """Return the format of the instruction in assembly"""
+        return class_.__name__
+
+    @classproperty
+    def assembly_regex(class_):
+        """Return a regex that can be used to search for all values within
+        `class_.operand_tup`.
+        """
+        return re.compile(class_.__name__)
+
+    def as_bytearray(self):
+        return self.pack(self._opcode)
 
 
 class SpecialInstruction():
     """Non-Assembly Instruction"""
-
-
-class Branch():  # TODO
     pass
 
 
 class UnimplementedException(Exception):
     pass
-
-if __name__ == '__main__':
-    r_type_instruction = RInstruction(funct7=1, rs2=1, rs1=1,
-                                      funct3=1, rd=1, opcode=1)
-
-    assert [hex(c) for c in r_type_instruction.as_bytearray()] ==\
-            ['0x81', '0x90', '0x10', '0x2'] if sys.byteorder == 'little' else\
-            ['0x2', '0x10', '0x90', '0x81'],\
-            [hex(c) for c in r_type_instruction.as_bytearray()]
-
-    print('------------- Self test successful -------------')
