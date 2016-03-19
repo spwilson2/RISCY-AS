@@ -4,6 +4,7 @@
 import bitstruct
 import sys
 import codecs
+import re
 from collections import namedtuple
 
 # TODO: The maker of bitstruct used bitorder instead of byte order...
@@ -59,12 +60,26 @@ def flip_bytes(byte_array):
     return bytearray(codecs.decode(flippedstring, 'hex'))
 
 
-class Instruction(object):
-    """The ABC for assembly instructions."""
+def get_bitslice(obj, topidx, bottomidx):
+    """Returns the bits within obj[bottomidx:topidx+1] (Or in architecture format
+    obj[topidx:bottomidx])
+    """
+    obj = obj >> bottomidx
 
-    def __init__(self, *, opcode, byte_order=None):
+    # Generate a bitmask to get topidx - bottomidx number bits
+    mask = 1
+    for bit in range(topidx - bottomidx):
+        mask = mask << 1
+        mask += 1
+    return obj & mask
+
+
+class Instruction(object):
+    """The Base Class for all assembly instructions."""
+
+    def __init__(self, *, opcode, byteorder=None):
         self._opcode = opcode
-        self._byte_order = self._set_byte_order(byte_order)
+        self._byteorder = self._set_byteorder(byteorder)
         self._struct_frmt = None
 
     def __str__(self):
@@ -72,25 +87,43 @@ class Instruction(object):
         return str(self.__class__)
 
     def as_bytearray(self):
-        """Return the Instruction as an integer, needs to be implemented
-        in subclasses.
+        """Return the Instruction as an integer, needs to be implemented in
+        subclasses.
         """
-        raise Exception('as_bytearray Unimplemented in: %s' % self.__class__)
+        raise UnimplementedException('as_bytearray Unimplemented in: %s' %
+                                     self.__class__)
 
-    def _set_byte_order(self, byte_order):
-        if byte_order in ENDIAN_CHARMAP.keys():
-            self._byte_order = byte_order
+    def _set_byteorder(self, byteorder):
+        if byteorder in ENDIAN_CHARMAP.keys():
+            self._byteorder = byteorder
         else:
-            self._byte_order = DEFAULT_BYTEORDER
+            self._byteorder = DEFAULT_BYTEORDER
 
     def pack(self, *args):
+        """Pack the given arguements into a bytearray using the format
+        specified in `self._struct_frmt`. This is done at the bit level, rather
+        than the normal python byte packing level.
+        """
         packed = bitstruct.pack('>' + str(self._struct_frmt), *args)
-        return packed if self._byte_order == 'big' else flip_bytes(packed)
+        return packed if self._byteorder == 'big' else flip_bytes(packed)
 
     @classproperty
     def assembly_format(class_):
+        """Return the format of the instruction in assembly"""
         return ' '.join((class_.__name__,
                          ', '.join(class_.operand_tup._fields)))
+
+    @classproperty
+    def assembly_regex(class_):
+        """Return a regex that can be used to search for all values within
+        `class_.operand_tup`.
+        """
+        re_string = class_.__name__
+        print(re_string)
+        for operand in class_.operand_tup._fields:
+            re_string += '[ ]*[%%$]?(?P<%s>[\d]*),' % operand
+        print(re.compile(re_string[:-1]))
+        return re.compile(re_string[:-1])
 
 
 class RInstruction(Instruction):
@@ -101,9 +134,9 @@ class RInstruction(Instruction):
     operand_tup = r_operands
 
     def __init__(self, *, rd, rs1, rs2, opcode,
-                 funct3, funct7, byte_order=None):
+                 funct3, funct7, byteorder=None):
 
-        RInstruction.super.__init__(self, byte_order=byte_order, opcode=opcode)
+        RInstruction.super.__init__(self, byteorder=byteorder, opcode=opcode)
         self._operands = RInstruction.r_operands(rd=rd, rs1=rs1, rs2=rs2)
         self._funct3 = funct3
         self._funct7 = funct7
@@ -121,37 +154,77 @@ class IInstruction(Instruction):
     """I-Type Instruction"""
     super = Instruction
     i_operands = namedtuple('operands', ['rd', 'rs1', 'imm'])
+    operand_tup = i_operands
 
     def __init__(self, *, rd, rs1, imm, opcode, funct3):
         IInstruction.super.__init__(self, opcode)
         self._operands = IInstruction.i_operands(rd=rd, rs1=rs1, imm=imm)
+        self._funct3 = funct3
+        self._struct_frmt = 'u12u5u3u5u7'
 
+    def as_bytearray(self):
+        return self.pack(
+                self._operands._imm, self._operands.rs1,
+                self._funct3, self._operands.rd,
+                self._opcode
+                )
+
+#################################################
+######## TODO: Look at init and as_bytearray ########
+#################################################
 
 class SInstruction(Instruction):
     """S-Type Instruction"""
     super = Instruction
-    s_operands = IInstruction.i_operands
+    s_operands = namedtuple('operands', ['rs1', 'rs2', 'imm'])
+    operand_tup = s_operands
 
-    def __init__(self, *, rd, rs1, imm, opcode, funct3):
-        SInstruction.super.__init__(self, opcode)
-        self._operands = SInstruction.s_operands(rd=rd, rs1=rs1, imm=imm)
+    def __init__(self, *, byteorder=None, rs1, rs2, imm, opcode, funct3):
+        SInstruction.super.__init__(self, opcode, byteorder=None)
+        self._operands = SInstruction.s_operands(rs1=rs1, rs2=rs2, imm=imm)
+        self._funct3 = funct3
+        self._struct_frmt = 'u7u5u5u3u7'
+
+    def as_bytearray(self):
+        return self.pack(
+                get_bitslice(self._operands._imm, 11, 5),
+                self._operands.rs2, self._operands.rs1,
+                self._funct3,
+                get_bitslice(self._operands._imm, 4, 0),
+                self._opcode
+                )
 
 
-class SBInstruction(Instruction):
+class SBInstruction(SInstruction):
     """SB-Type Instruction"""
-    super = Instruction
+    super = SInstruction
 
-    def __init__(self, *, rd, rs1, imm, opcode, funct3):
-        SBInstruction.super.__init__(self, opcode)
+    def __init__(self, *, byteorder=None, rd, rs1, imm, opcode, funct3):
+        SBInstruction.super.__init__(self, rd=rd, rs1=rs1, imm=imm,
+                                     opcode=opcode, funct3=funct3,
+                                     byteorder=byteorder)
+        self._struct_frmt = 'u1u6u5u5u3u4u1u7'
+
+    def as_bytearray(self):
+        return self.pack(
+                get_bitslice(self._operands._imm, 12, 12),
+                get_bitslice(self._operands._imm, 10, 5),
+                self._operands.rs2, self._operands.rs1,
+                self._funct3,
+                get_bitslice(self._operands._imm, 4, 1),
+                get_bitslice(self._operands._imm, 11, 11),
+                self._opcode
+                )
 
 
 class UInstruction(Instruction):
     """U-Type Instruction"""
     super = Instruction
     u_operands = namedtuple('operands', ['rd', 'imm'])
+    operand_tup = u_operands
 
-    def __init__(self, *, rd, imm, opcode):
-        UInstruction.super.__init__(self, opcode)
+    def __init__(self, *, byteorder=None, rd, imm, opcode):
+        UInstruction.super.__init__(self, opcode, byteorder=byteorder)
         self._operands = UInstruction.u_operands(rd=rd, imm=imm)
 
 
@@ -168,6 +241,10 @@ class SpecialInstruction():
 
 
 class Branch():  # TODO
+    pass
+
+
+class UnimplementedException(Exception):
     pass
 
 if __name__ == '__main__':

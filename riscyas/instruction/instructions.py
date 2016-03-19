@@ -8,22 +8,22 @@ TODO:
 """
 
 
-class LUI(UInstruction):
-    super = UInstruction
-
-    __opcode = 0b0110111
-
-    def __init__(self, imm, rd):
-        self.super.__init__(self, imm=imm,
-                            rd=rd, opcode=self.__opcode)
-
-
-class JAL():
-    __opcode = 0b0110111
-
-    def __init__(self, imm, rd):
-        self.super.__init__(self, imm=imm,
-                            rd=rd, opcode=self.__opcode)
+#class LUI(UInstruction):
+#    super = UInstruction
+#
+#    __opcode = 0b0110111
+#
+#    def __init__(self, imm, rd):
+#        self.super.__init__(self, imm=imm,
+#                            rd=rd, opcode=self.__opcode)
+#
+#
+#class JAL():
+#    __opcode = 0b0110111
+#
+#    def __init__(self, imm, rd):
+#        self.super.__init__(self, imm=imm,
+#                            rd=rd, opcode=self.__opcode)
 
 
 #class BEQ():
@@ -137,6 +137,7 @@ def defined_instructions():
     """Return a list of the instructions defined in this file."""
     # FIXME: There probably is a better way to do this with inheritence
     # detection.
+    #return [ADD]
 
     #return [ADD]
     return [obj for _, obj in inspect.getmembers(sys.modules[__name__]) if

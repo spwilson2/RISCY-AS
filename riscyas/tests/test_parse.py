@@ -18,10 +18,10 @@ class TestParse(TestCase):
         obj = AS_Parser(StringIO())
         self.assertIs(obj._parse_instruction('ADD 1,2,3')['class'], ADD)
 
-    def test_make_operand_re(self):
-        from riscyas.instruction.instructions import ADD
-        from riscyas.instruction.utils.parse import make_operand_re
-        print(make_operand_re(ADD))
+    #def test_make_operand_re(self):
+    #    from riscyas.instruction.instructions import ADD
+    #    from riscyas.instruction.utils.parse import make_operand_re
+    #    print(make_operand_re(ADD))
 
     def test_parse_operands(self):
         from riscyas.instruction.utils.parse import AS_Parser
@@ -36,7 +36,7 @@ class TestParse(TestCase):
         except Exception as e:
             print(e)
 
-        self.assertEqual(parsed_operands, {'rd':'1','rs1':'2','rs2':'3'})
+        self.assertEqual(parsed_operands, {'rd':1,'rs1':2,'rs2':3})
 
     def test_single_parse(self):
         from riscyas.instruction.utils.parse import AS_Parser

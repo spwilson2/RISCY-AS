@@ -10,9 +10,12 @@ TODO:
     At some point could have it preparse for directives etc.
 """
 
+# TODO: For parsing out comments, just split on ';' and remove all except [0]
 
 def make_operand_re(instruction_class):
-    """Takes the given instruction class and creates a regex that can be used
+    """Deprecated
+
+    Takes the given instruction class and creates a regex that can be used
     to get operands.
     """
     re_string = instruction_class.__name__
@@ -29,7 +32,7 @@ class AS_Parser(object):
     instuctions/commands.
     """
     instructions = {instr.__name__: {'class': instr, 'operand_re':
-                    make_operand_re(instr)} for
+                    instr.assembly_regex} for
                     instr in risc_instrs.defined_instructions()}
 
     def __init__(self, stream):
@@ -58,6 +61,7 @@ class AS_Parser(object):
 
                 # Instantiate the instruction with the operands.
                 if operands is not None:
+                    print(instruction['class'](**operands)._operands)
                     yield instruction['class'](**operands).as_bytearray()
 
                     # Cleanup state to start processing the next instruction.
