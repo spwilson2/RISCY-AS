@@ -106,4 +106,4 @@ class TestParse(TestCase):
                 parsed = next(iter(obj))
         except StopIteration:
             print('Couldn\'t match a instruction.')
-            rais
+            raise
