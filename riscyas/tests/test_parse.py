@@ -107,3 +107,16 @@ class TestParse(TestCase):
         except StopIteration:
             print('Couldn\'t match a instruction.')
             raise
+
+    def test_UInstruction(self):
+        from riscyas.instruction.utils.parse import AS_Parser
+        from io import StringIO
+
+        obj = AS_Parser(StringIO('LUI 1,100'))
+        try:
+            parsed = next(iter(obj))
+            self.assertEqual(parsed, bytearray(b'\xb7\x40\x06\x00'))
+        except StopIteration:
+            print('Couldn\'t match a instruction.')
+            raise
+

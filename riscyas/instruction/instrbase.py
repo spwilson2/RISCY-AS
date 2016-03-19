@@ -154,8 +154,8 @@ class IInstruction(Instruction):
     i_operands = namedtuple('operands', ['rd', 'rs1', 'imm'])
     operand_tup = i_operands
 
-    def __init__(self, *, rd, rs1, imm, opcode, funct3):
-        IInstruction.super.__init__(self, opcode)
+    def __init__(self, *, rd, rs1, imm, opcode, funct3, byteorder=None):
+        IInstruction.super.__init__(self, opcode=opcode, byteorder=byteorder)
         self._operands = IInstruction.i_operands(rd=rd, rs1=rs1, imm=imm)
         self._funct3 = funct3
         self._struct_frmt = 'u12u5u3u5u7'
@@ -170,6 +170,7 @@ class IInstruction(Instruction):
 #################################################
 ######## TODO: Look at init and as_bytearray ########
 #################################################
+
 
 class SInstruction(Instruction):
     """S-Type Instruction"""
@@ -222,16 +223,26 @@ class UInstruction(Instruction):
     operand_tup = u_operands
 
     def __init__(self, *, byteorder=None, rd, imm, opcode):
-        UInstruction.super.__init__(self, opcode, byteorder=byteorder)
+        UInstruction.super.__init__(self, opcode=opcode, byteorder=byteorder)
         self._operands = UInstruction.u_operands(rd=rd, imm=imm)
+        self._struct_frmt = 'u20u5u7'
+
+    def as_bytearray(self):
+        # TODO: I don't remember how the risc spec works for this imm[31:12]
+        # will need to look that up for this imm.
+        return self.pack(
+                self._operands.imm,
+                self._operands.rd, self._opcode
+                )
 
 
 class UJInstruction(UInstruction):
     """UJ-Type Instruction"""
     super = UInstruction
 
-    def __init__(self, *, rd, imm, opcode):
-        UJInstruction.super.__init__(self, rd, imm, opcode)
+    def __init__(self, *, rd, imm, opcode, byteorder=None):
+        UJInstruction.super.__init__(self, rd=rd, imm=imm, opcode=opcode,
+                byteorder=byteorder)
 
 
 class SpecialInstruction():

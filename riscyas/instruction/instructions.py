@@ -8,22 +8,23 @@ TODO:
 """
 
 
-#class LUI(UInstruction):
-#    super = UInstruction
-#
-#    __opcode = 0b0110111
-#
-#    def __init__(self, imm, rd):
-#        self.super.__init__(self, imm=imm,
-#                            rd=rd, opcode=self.__opcode)
-#
-#
-#class JAL():
-#    __opcode = 0b0110111
-#
-#    def __init__(self, imm, rd):
-#        self.super.__init__(self, imm=imm,
-#                            rd=rd, opcode=self.__opcode)
+class LUI(UInstruction):
+    super = UInstruction
+
+    __opcode = 0b0110111
+
+    def __init__(self, imm, rd):
+        self.super.__init__(self, imm=imm,
+                            rd=rd, opcode=self.__opcode)
+
+
+class JAL(UInstruction):
+    super = UInstruction
+    __opcode = 0b1101111
+
+    def __init__(self, imm, rd):
+        self.super.__init__(self, imm=imm,
+                            rd=rd, opcode=self.__opcode)
 
 
 #class BEQ():
