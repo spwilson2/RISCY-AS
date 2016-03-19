@@ -2,12 +2,13 @@
 """ Defines the instructions supported and their respective objects.  """
 
 from collections import namedtuple
+import struct
 
 
 big_endian = False
 
 _endianess = { False: 'little',
-               True: 'big'
+               True:  'big'
              }
 
 class Instruction(object):
@@ -23,17 +24,16 @@ class Instruction(object):
         """Return the Instruction as an integer, needs to be implemented
         in subclasses.
         """
-        raise Exception('as_int Unimplemented in: %s' % self.__name__)
+        raise UnimpletedException('%s Unimplemented in: %s' % (self.__name__,
+            self.__class__))
 
     def __format(self):
-        raise Exception('__format Unimplemented in: %s' % self.__name__)
+        raise UnimpletedException('%s Unimplemented in: %s' % (self.__name__,
+            self.__class__))
 
     def _build_int(*args):
-        args = list(*args)
-        builder = 
-
-        for 
-
+        raise UnimpletedException('%s Unimplemented in: %s' % (self.__name__,
+            self.__class__))
 
 class RInstruction(Instruction):
     """R-Type Instruction"""
@@ -98,6 +98,8 @@ class SpecialInstruction():
 class Branch():  # TODO
     pass
 
+class UnimpletedException:
+    pass
 
 r_operands = namedtuple('operands', ['rd', 'rs1', 'rs2'])
 i_operands = namedtuple('operands', ['rd', 'rs1', 'imm'])
