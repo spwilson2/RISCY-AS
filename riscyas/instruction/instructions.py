@@ -1,17 +1,31 @@
 import sys
 import inspect
-from riscyas.instruction.instrbase import RInstruction
+from riscyas.instruction.instrbase import RInstruction, UInstruction
 
 """
 TODO:
     Make a class generator for these.
 """
 
-#class LUI():
-#    pass
-#class JAL():
-#    pass
-#
+
+class LUI(UInstruction):
+    super = UInstruction
+
+    __opcode = 0b0110111
+
+    def __init__(self, imm, rd):
+        self.super.__init__(self, imm=imm,
+                            rd=rd, opcode=self.__opcode)
+
+
+class JAL():
+    __opcode = 0b0110111
+
+    def __init__(self, imm, rd):
+        self.super.__init__(self, imm=imm,
+                            rd=rd, opcode=self.__opcode)
+
+
 #class BEQ():
 #    pass
 #class BNE():
