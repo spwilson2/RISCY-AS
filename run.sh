@@ -1,16 +1,13 @@
 #!/bin/bash 
 
-#
-
-
-export BIN="as"
+export BIN=$1
 
 LINELENGTH=80
 #TODO: Get the Line length param in there...
 LINEBAR="$(perl -e 'print "#" x 80')"
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-SRCDIR="$DIR/src"
+SRCDIR="$DIR/riscyas"
 
 
 
@@ -24,7 +21,7 @@ $LINEBAR
 EOF
 
 TO_CLEAN="src.egg-info venv"
-PYC_FILES="`find | grep -E -e "*.pyc$" -e "__pycache__" -e "*.out"`"
+PYC_FILES="`find | grep -E -e "*.pyc$" -e "__pycache__" -e "*.out" -e "sec.egg-info"`"
 TO_CLEAN="$PYC_FILES $TO_CLEAN"
 rm -rf $TO_CLEAN; exit $?;
 
@@ -63,10 +60,17 @@ command virtualenv --version >/dev/null  ||
     source $VENV_DIR/bin/activate
 
     #TODO: On release will need to change from editable too...?
-    $PIP_BIN install --editable $DIR
+    $PIP_BIN install --editable $SRCDIR
 
+
+if [ "$1" = "test" ]; then
+    # Run the test
+    cd $SRCDIR
+    $PYTHON_BIN setup.py test
+else
     # Run the program.
-    $BIN $@
+    $BIN "${@:2}"
+fi
 )
 
 exit
