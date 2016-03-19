@@ -58,7 +58,7 @@ class AS_Parser(object):
 
                 # Instantiate the instruction with the operands.
                 if operands is not None:
-                    yield instruction['class'](**operands)
+                    yield instruction['class'](**operands).as_bytearray()
 
                     # Cleanup state to start processing the next instruction.
                     command_builder = ''
@@ -91,7 +91,7 @@ class AS_Parser(object):
         match = instruction['operand_re'].search(command)
 
         if match:
-            return match.groupdict()
+            return {k: int(v) for k, v in match.groupdict().items()}
 
     @staticmethod
     def __strip(line):

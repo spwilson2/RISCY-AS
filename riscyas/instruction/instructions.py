@@ -41,7 +41,7 @@ class ANDI():
 class ADD(instrbase.RInstruction):
     super = instrbase.RInstruction
     __opcode = 0b0110011
-    __funct3 = 0b111
+    __funct3 = 0b000
     __funct7 = 0b0000000
 
     def __init__(self, rs1, rs2, rd):
