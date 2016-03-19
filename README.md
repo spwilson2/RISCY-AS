@@ -1,8 +1,10 @@
 # RISCY-AS
-An elementary assembler for the RISC-V ISA. For simplicity memory is automatically alligned at 4 byte boundaries.
+An elementary assembler for the RISC-V ISA. For simplicity memory is
+automatically alligned at 4 byte boundaries.
 
 ## Supported RISC-V Instructions
-Only a subset of the RV32I ISA will be implemented. The following table lists supported instructions.
+Only a subset of the RV32I ISA will be implemented. The following table lists
+supported instructions.
 
 | Format |Args| Instruction |
 | :------------- | ---- | ------------------------- |
@@ -36,7 +38,28 @@ Only a subset of the RV32I ISA will be implemented. The following table lists su
 |dd $imm| Declare Doubleword|
 
 ## Instruction Format
-Since the assembler is very elementary, input files need to be formatted very specifically. Registers begin with '%', immediates with '$', and args should be in the order shown in tables.
+Since the assembler is very elementary, input files need to be formatted very
+specifically. Registers begin with '%', immediates with '$', and args should be
+in the order shown in tables.
 
 ## Immediates
 In early implementation the only accepted immediates will be hexadecimals begining with '0x'.
+
+
+## Examples
+
+To try assembling an example:
+
+```
+git clone https://github.com/spwilson2/RISCY-AS riscy-as
+cd riscy-as
+./run.sh examples/exin.txt examples/exout.bin
+```
+
+A quick way to examine the output is to use hexdump: `hexdump -C
+examples/exout.bin` (I prefer) `od -t x1 examples/exout.bin`
+
+
+RISC-AS also supports text output of hex directly!
+
+`./run.sh examples/exin.txt --text`
