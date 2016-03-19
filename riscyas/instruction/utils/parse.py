@@ -18,7 +18,7 @@ class AS_Parser(object):
     """
     print(risc_instrs.defined_instructions()[0].assembly_format)
 
-    instruction_regex = {instr.__class__.__name__: re.compile(instr.assembly_format) for
+    instruction_regex = {instr.__name__: re.compile(instr.assembly_format) for
                          instr in risc_instrs.defined_instructions()}
 
 
@@ -27,7 +27,7 @@ class AS_Parser(object):
         # preparse rather than parse all in one shot.
         self._in_stream = stream
 
-    def __itr__(self):
+    def __iter__(self):
         # We might have multiple lines for a single command?
         # so allow it to go through multple lines.
         command_builder = ''
@@ -42,11 +42,22 @@ class AS_Parser(object):
                 command_builder = ''
                 yield instruction
 
+    def instruction_as_regex(instr):
+        pass
+
     def parse(self, command):
         """Try parsing the command into an instruction. Return None if unable
         to.
         """
         if not command:
+            return
+
+        # Search through all instructions looking for this command. If not
+        # found return None.
+        instruction = command.split(' ')[0]
+        try:
+            return self.instruction_regex[instruction]
+        except KeyError:
             return
 
     @staticmethod

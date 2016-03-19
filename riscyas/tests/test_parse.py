@@ -15,8 +15,9 @@ class TestParse(TestCase):
         from riscyas.instruction.utils.parse import AS_Parser
         from io import StringIO
         obj = AS_Parser(StringIO('ADD 1,2,2'))
-        iter(obj)
-        #parsed = next(iter(obj))
-        #print(parsed)
-
-
+        try:
+            parsed = next(iter(obj))
+        except StopIteration:
+            print('Couldn\'t match a instruction.')
+            raise
+        print(parsed)
