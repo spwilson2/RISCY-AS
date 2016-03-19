@@ -1,69 +1,122 @@
 import sys
 import inspect
-from riscyas.instruction import instrbase
+from riscyas.instruction.instrbase import RInstruction
 
 """
 TODO:
-    Use __name__ to check for the instruction when parsing.
+    Make a class generator for these.
 """
 
-class LUI():
-    pass
-class JAL():
-    pass
+#class LUI():
+#    pass
+#class JAL():
+#    pass
+#
+#class BEQ():
+#    pass
+#class BNE():
+#    pass
+#class BLT():
+#    pass
+#class BGE():
+#    pass
+#class BLTU():
+#    pass
+#class BGEU():
+#    pass
+#class LW():
+#    pass
+#class SW():
+#    pass
+#class ADDI():
+#    pass
+#class XORI():
+#    pass
+#class ORI():
+#    pass
+#class ANDI():
+#    pass
 
-class BEQ():
-    pass
-class BNE():
-    pass
-class BLT():
-    pass
-class BGE():
-    pass
-class BLTU():
-    pass
-class BGEU():
-    pass
-class LW():
-    pass
-class SW():
-    pass
-class ADDI():
-    pass
-class XORI():
-    pass
-class ORI():
-    pass
-class ANDI():
-    pass
 
-
-class ADD(instrbase.RInstruction):
-    super = instrbase.RInstruction
+class ADD(RInstruction):
+    super = RInstruction
     __opcode = 0b0110011
     __funct3 = 0b000
     __funct7 = 0b0000000
 
     def __init__(self, rs1, rs2, rd):
 
-        ADD.super.__init__(self, rs1=rs1, rs2=rs2, rd=rd,
-                           funct3=ADD.__funct3,
-                           funct7=ADD.__funct7,
-                           opcode=ADD.__opcode
+        self.super.__init__(self, rs1=rs1, rs2=rs2, rd=rd,
+                           funct3=self.__funct3,
+                           funct7=self.__funct7,
+                           opcode=self.__opcode
                            )
 
-class SUB():
-    pass
-class XOR():
-    pass
-class OR():
-    pass
-class AND():
-    pass
-class SBREAK():
-    pass
-class NOP():
-    pass
+
+class SUB(RInstruction):
+    super = RInstruction
+    __opcode = 0b0110011
+    __funct3 = 0b000
+    __funct7 = 0b0100000
+
+    def __init__(self, rs1, rs2, rd):
+
+        self.super.__init__(self, rs1=rs1, rs2=rs2, rd=rd,
+                           funct3=self.__funct3,
+                           funct7=self.__funct7,
+                           opcode=self.__opcode
+                           )
+
+
+class XOR(RInstruction):
+    super = RInstruction
+    __opcode = 0b0110011
+    __funct3 = 0b100
+    __funct7 = 0b0000000
+
+    def __init__(self, rs1, rs2, rd):
+
+        self.super.__init__(self, rs1=rs1, rs2=rs2, rd=rd,
+                           funct3=self.__funct3,
+                           funct7=self.__funct7,
+                           opcode=self.__opcode
+                           )
+
+
+class OR(RInstruction):
+    super = RInstruction
+    __opcode = 0b0110011
+    __funct3 = 0b110
+    __funct7 = 0b0000000
+
+    def __init__(self, rs1, rs2, rd):
+
+        self.super.__init__(self, rs1=rs1, rs2=rs2, rd=rd,
+                           funct3=self.__funct3,
+                           funct7=self.__funct7,
+                           opcode=self.__opcode
+                           )
+
+
+class AND(RInstruction):
+    super = RInstruction
+    __opcode = 0b0110011
+    __funct3 = 0b111
+    __funct7 = 0b0000000
+
+    def __init__(self, rs1, rs2, rd):
+
+        self.super.__init__(self, rs1=rs1, rs2=rs2, rd=rd,
+                           funct3=self.__funct3,
+                           funct7=self.__funct7,
+                           opcode=self.__opcode
+                           )
+
+
+#class SBREAK():
+#    pass
+#class NOP():
+#    pass
 
 
 def defined_instructions():
@@ -71,8 +124,9 @@ def defined_instructions():
     # FIXME: There probably is a better way to do this with inheritence
     # detection.
 
-    return [ADD]
-    #return [obj for _, obj in inspect.getmembers(sys.modules[__name__])
+    #return [ADD]
+    return [obj for _, obj in inspect.getmembers(sys.modules[__name__]) if
+        inspect.isclass(obj)]
     #        if inspect.isclass(obj)]
 
 if __name__ == '__main__':
