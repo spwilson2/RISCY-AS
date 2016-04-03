@@ -1,11 +1,11 @@
 from unittest import TestCase
+from riscyas.instruction.instrbase import get_bitslice
 
 class TestInstrbase(TestCase):
     def test_import(self):
-        import riscyas.instruction.instrbase
+        pass
 
     def test_get_bitslice(self):
-        from riscyas.instruction.instrbase import get_bitslice
 
         self.assertEqual(get_bitslice(3, 1, 1), 1)
         self.assertEqual(get_bitslice(16, 4, 4), 1)
