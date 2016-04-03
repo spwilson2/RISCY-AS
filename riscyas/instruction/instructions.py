@@ -11,6 +11,21 @@ TODO:
     * improve the export of these.
 """
 
+UMAP = {
+        'LUI': {'__opcode': 0b0110111},
+        'JAL': {'__opcode': 0b1101111},
+        }
+
+def UFactory(inst_map):
+
+    UInstuctions = {}
+    for instr, dict_ in inst_map.items():
+        UInstuctions[instr] = type(instr, (), dict_)
+
+    print(UInstuctions)
+
+UFactory(UMAP)
+
 
 class LUI(UInstruction):
     super = UInstruction
