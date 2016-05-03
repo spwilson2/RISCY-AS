@@ -1,0 +1,3 @@
+[submodule "riscyas/isa/riscv-opcodes"]
+	path = riscyas/isa/riscv
+	url = https://github.com/spwilson2/riscv-opcodes
